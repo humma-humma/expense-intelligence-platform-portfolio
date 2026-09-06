@@ -1,0 +1,58 @@
+{
+  "AnalyzeExpenseModelVersion": "1.0",
+  "ExpenseDocuments": [
+    {
+      "ExpenseIndex": 1,
+      "SummaryFields": [
+        {
+          "Type": {"Text": "VENDOR_NAME"},
+          "ValueDetection": {
+            "Text": "Beispielmarkt Berlin",
+            "Confidence": 98.5,
+            "Geometry": {"BoundingBox": {"Left": 0.1, "Top": 0.1, "Width": 0.4, "Height": 0.05}}
+          },
+          "PageNumber": 1
+        },
+        {
+          "Type": {"Text": "INVOICE_RECEIPT_DATE"},
+          "ValueDetection": {
+            "Text": "30.08.2026",
+            "Confidence": 97.0,
+            "Geometry": {"BoundingBox": {"Left": 0.1, "Top": 0.2, "Width": 0.2, "Height": 0.04}}
+          },
+          "PageNumber": 1
+        },
+        {
+          "Type": {"Text": "TOTAL"},
+          "ValueDetection": {
+            "Text": "12,34 €",
+            "Confidence": 99.0,
+            "Geometry": {"BoundingBox": {"Left": 0.7, "Top": 0.8, "Width": 0.2, "Height": 0.05}}
+          },
+          "PageNumber": 1
+        }
+      ],
+      "LineItemGroups": [
+        {
+          "LineItems": [
+            {
+              "LineItemExpenseFields": [
+                {"Type": {"Text": "ITEM"}, "ValueDetection": {"Text": "KAFFEE", "Confidence": 94.0}, "PageNumber": 1},
+                {"Type": {"Text": "QUANTITY"}, "ValueDetection": {"Text": "2", "Confidence": 93.0}, "PageNumber": 1},
+                {"Type": {"Text": "UNIT_PRICE"}, "ValueDetection": {"Text": "3,50", "Confidence": 92.0}, "PageNumber": 1},
+                {"Type": {"Text": "PRICE"}, "ValueDetection": {"Text": "7,00", "Confidence": 96.0}, "PageNumber": 1}
+              ]
+            },
+            {
+              "LineItemExpenseFields": [
+                {"Type": {"Text": "ITEM"}, "ValueDetection": {"Text": "MILCH", "Confidence": 95.0}, "PageNumber": 1},
+                {"Type": {"Text": "PRICE"}, "ValueDetection": {"Text": "5,34", "Confidence": 97.0}, "PageNumber": 1}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "ResponseMetadata": {"RequestId": "removed-before-storage", "HTTPStatusCode": 200}
+}

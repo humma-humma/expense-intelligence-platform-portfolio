@@ -1,0 +1,90 @@
+name: expense-intelligence
+
+x-app-environment: &app-environment
+  EXPENSE_ENVIRONMENT: development
+  EXPENSE_DATABASE_URL: postgresql+psycopg://expense:expense@postgres:5432/expense
+  EXPENSE_REDIS_URL: redis://redis:6379/0
+  EXPENSE_S3_ENDPOINT_URL: http://minio:9000
+  EXPENSE_S3_ACCESS_KEY: expense-local
+  EXPENSE_S3_SECRET_KEY: expense-local-secret
+  EXPENSE_S3_BUCKET: receipts
+  EXPENSE_S3_REGION: eu-central-1
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: expense
+      POSTGRES_USER: expense
+      POSTGRES_PASSWORD: expense
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U expense -d expense"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - redis-data:/data
+
+  minio:
+    # Archived Community image for local development only; production uses S3.
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: expense-local
+      MINIO_ROOT_PASSWORD: expense-local-secret
+    ports:
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - minio-data:/data
+
+  api:
+    build:
+      context: .
+      target: runtime
+    command: ["sh", "-c", "alembic upgrade head && uvicorn expense_intelligence.main:app --host 0.0.0.0 --port 8000"]
+    environment: *app-environment
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  worker:
+    build:
+      context: .
+      target: runtime
+    command: ["celery", "-A", "expense_intelligence.celery_app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1"]
+    environment: *app-environment
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:

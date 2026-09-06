@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "expense-intelligence-platform"
+version = "0.1.0"
+description = "Personal German receipt ingestion and grounded expense intelligence service."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "alembic>=1.16,<2",
+    "boto3>=1.40,<2",
+    "celery[redis]>=5.6,<6",
+    "fastapi>=0.116,<1",
+    "pillow>=11,<13",
+    "psycopg[binary]>=3.2,<4",
+    "pydantic-settings>=2.10,<3",
+    "python-multipart>=0.0.20,<1",
+    "sqlalchemy>=2.0.52,<3",
+    "uvicorn[standard]>=0.35,<1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28,<1",
+    "mypy>=1.17,<2",
+    "pytest>=8.4,<10",
+    "pytest-cov>=6.2,<8",
+    "ruff>=0.12,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/expense_intelligence"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["expense_intelligence"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["expense_intelligence"]
+
+[[tool.mypy.overrides]]
+module = ["boto3", "botocore.*", "celery", "celery.*"]
+ignore_missing_imports = true

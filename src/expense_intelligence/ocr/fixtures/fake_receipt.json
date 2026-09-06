@@ -1,0 +1,16 @@
+{
+  "merchant": "Beispielmarkt Berlin",
+  "purchase_date": "2026-08-30",
+  "total": "12.34",
+  "currency": "EUR",
+  "confidence": "99.0",
+  "line_items": [
+    {
+      "description": "Beispielprodukt",
+      "total": "12.34",
+      "confidence": "99.0",
+      "evidence": []
+    }
+  ],
+  "evidence": []
+}
