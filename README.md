@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/humma-humma/expense-intelligence-platform-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/humma-humma/expense-intelligence-platform-portfolio/actions/workflows/ci.yml)
 
+![Expense Intelligence portfolio banner](assets/portfolio/github_social_preview.png)
+
 A production-oriented backend for turning German receipt photographs into structured, evidence-traceable expense records. The project demonstrates asynchronous ML-service design today and provides a cost-conscious path toward expense analytics, hybrid retrieval, and a grounded agentic assistant.
 
 > **Current status:** the local Artifact C vertical slice is complete. Real German OCR ingestion is in progress. Analytics and Artifact E capabilities are clearly marked as planned below.
